@@ -1,0 +1,6 @@
+na=int(input())
+la=list(map(int,input().split()))
+nb=int(input())
+lb=list(map(int,input().split()))
+print (max(la),end=" ")
+print (max(lb))
