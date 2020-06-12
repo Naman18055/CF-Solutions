@@ -1,6 +1,7 @@
 import sys
 input = sys.stdin.readline
 from collections import deque
+sys.setrecursionlimit(100000)
 
 class Graph(object):
 	"""docstring for Graph"""
@@ -92,7 +93,15 @@ class Graph(object):
 				continue
 			# Change_The_Answers()
 
-
+	def calc(self,root):
+		r = []
+		for i in self.graph[root]:
+			if i!=self.parent[root]:
+				r += self.calc(i)
+		if v[root]>len(r):
+			return False
+		r.insert(v[root],root)
+		return r
 
 n = int(input())
 g = Graph(n,False)
@@ -103,3 +112,17 @@ for i in range(n):
 	if p!=0:
 		g.addEdge(i,p-1)
 		g.parent[i] = p-1
+	else:
+		root = i
+# print (g.graph)
+a = g.calc(root)
+if not a:
+	print ("NO")
+	exit()
+ans = [0]*n
+# print (a,g.graph)
+for i in range(n):
+	ans[a[i]] = i+1
+print ("YES")
+print (*ans)
+
