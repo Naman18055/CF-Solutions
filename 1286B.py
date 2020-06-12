@@ -97,7 +97,11 @@ class Graph(object):
 		r = []
 		for i in self.graph[root]:
 			if i!=self.parent[root]:
-				r += self.calc(i)
+				temp = self.calc(i)
+				if not temp:
+					return False
+				else:
+					r += temp
 		if v[root]>len(r):
 			return False
 		r.insert(v[root],root)
