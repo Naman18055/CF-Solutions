@@ -1,14 +1,8 @@
-import random
-n,m = 25,23
-mat = [[0 for i in range(m)] for j in range(n)]
-for i in range(n):
-	for j in range(m):
-		x = random.randint(1,100)
-		if x<=2:
-			mat[i][j] = 1
-X = mat
-
-if True:
+for nt in range(int(input())):
+	n,m = map(int,input().split())
+	mat = []
+	for i in range(n):
+		mat.append(list(map(int,input().split())))
 	mid = []
 	if (n+m)%2==0:
 		mid = [(n+m-1)//2]
@@ -41,47 +35,3 @@ if True:
 
 	print (ans//2)
 
-def F(t,z,S,E,X):
-	i = t[0]
-	j = t[1]
-	if z == 1:
-		if i+1<n:
-			S[(i+1,j)]=X[i+1][j]
-		if j+1<m:
-			S[(i,j+1)]=X[i][j+1]
-	if z == -1:
-		if i-1>-1:
-			E[(i-1,j)]=X[i-1][j]
-		if j-1>-1:
-			E[(i,j-1)]=X[i][j-1]
- 
- 
-if True:
-	c = 0
-	S = {}
-	E = {}
-	S[(0,0)]=X[0][0]
-	E[(n-1,m-1)]=X[n-1][m-1]
-	L = S
-	R = E
-	while S!=E and L!=E:
-		a = 0
-		for s in S:
-			a += S[s]
-		b = 0
-		for e in E:
-			b += E[e]
-		c = c + min(a+b,len(S)+len(E)-a-b)
- 
-		P = {}
-		Q = {}
-		for s in S:
-			F(s,1,P,Q,X) 
-		for e in E:
-			F(e,-1,P,Q,X)
-		L = S
-		R = E
-		S = P
-		E = Q
- 
-	print(c) 
