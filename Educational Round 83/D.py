@@ -3,23 +3,13 @@ mod=998244353
 if n==3:
 	print (((m*(m-1))//2)%(mod))
 	exit()
-num=[]
-calc=[1]
-for i in range(2,m-2):
-	calc.append((calc[-1]*i)%mod)
-print (calc)
-for i in range(1,m-1):
-	a=i*2
-	k=1
-	if (n>4):
-		a=a*calc[i]
-	num.append(a)
-print (num)
-ans=0
-k=1
-for i in range(len(num)-1,-1,-1):
-	count=num[i]*(m-k)
-	k+=1
-	#print (count)
-	ans+=(count%mod)
-print (ans%mod)
+if n==2:
+	print(0)
+	exit()
+fact = [1,1]
+for i in range(2,max(n,m)+1):
+	fact.append((fact[-1]*i)%mod)
+ans = pow(2,n-3,mod)
+ans = ((n-2)*ans)%mod
+ans = ans*((fact[m]*pow((fact[n-1]*fact[m+1-n])%mod,mod-2,mod))%mod)
+print ((ans)%mod)
