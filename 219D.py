@@ -1,5 +1,5 @@
-# import sys
-# input = sys.stdin.readline
+import sys
+input = sys.stdin.readline
 from collections import deque
 
 class Graph(object):
@@ -19,6 +19,7 @@ class Graph(object):
 		queue = [root]
 		queue = deque(queue)
 		vis = [0]*self.n
+		total = 0
 		while len(queue)!=0:
 			element = queue.popleft()
 			vis[element] = 1
@@ -27,6 +28,14 @@ class Graph(object):
 					queue.append(i)
 					self.parent[i] = element
 					vis[i] = 1
+					count[i] = count[element] + 1
+					if (i,element) in away:
+						total += 1
+						rev[i] = rev[element] + 1
+					else:
+						rev[i] = rev[element]
+		return total
+
 
 	def dfs(self, root, ans): # Iterative DFS
 		stack=[root]
@@ -69,18 +78,16 @@ class Graph(object):
 		for i in range(self.n):
 			if indeg[i]==0:
 				q.append(i)
-		ans = []
 		while len(q)!=0:
 			e = q.popleft()
 			vis += 1
-			ans.append(e)
 			for i in self.graph[e]:
 				indeg[i] -= 1
 				if indeg[i]==0:
 					q.append(i)
 		if vis!=self.n:
 			return True
-		return ans
+		return False
 
 	def reroot(self, root, ans):
 		stack = [root]
@@ -100,29 +107,26 @@ class Graph(object):
 			# Change_The_Answers()
 
 n = int(input())
-g = Graph(26,True)
-done = {}
-s = input()
-start = s
+g = Graph(n,False)
+away = {}
 for i in range(n-1):
-	x = input()
-	j = 0
-	while j<min(len(s),len(x)) and s[j]==x[j]:
-		j += 1
-	if j==len(x) and len(s)>len(x):
-		print ("Impossible")
-		exit()
-	if j==len(s):
-		continue
-	if (ord(s[j]),ord(x[j])) not in done:
-		g.addEdge(ord(s[j])-97,ord(x[j])-97)
-		done[ord(s[j]),ord(x[j])] = 1
-	s = x
-order = g.detect_cycle()
-if order==True:
-	print ("Impossible")
-	exit()
-ans = ""
-for i in order:
-	ans += chr(i+97)
-print (ans)
+	x,y = map(int,raw_input().split())
+	away[(x-1,y-1)] = 1
+	g.addEdge(x-1,y-1)
+
+root = 0
+count = [0]*n
+rev = [0]*n
+total = g.bfs(0)
+ans = []
+minn = n
+# print (count,rev,total,away)
+for i in range(n):
+	if (total - rev[i]) + (count[i] - rev[i])<minn:
+		minn = (total - rev[i]) + (count[i] - rev[i])
+		ans = []
+		ans.append(i+1)
+	elif (total - rev[i]) + (count[i] - rev[i]) == minn:
+		ans.append(i+1)
+print (minn)
+print (" ".join(map(str,ans)))

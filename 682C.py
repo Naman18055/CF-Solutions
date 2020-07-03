@@ -1,5 +1,5 @@
-# import sys
-# input = sys.stdin.readline
+import sys
+input = sys.stdin.readline
 from collections import deque
 
 class Graph(object):
@@ -27,6 +27,38 @@ class Graph(object):
 					queue.append(i)
 					self.parent[i] = element
 					vis[i] = 1
+					dist[i] = dist[element] + w[(element,i)]
+
+
+	def bfs2(self, root): # NORMAL BFS
+		queue = [root]
+		queue = deque(queue)
+		vis = [0]*self.n
+		while len(queue)!=0:
+			element = queue.popleft()
+			vis[element] = 1
+			for i in self.graph[element]:
+				if vis[i]==0:
+					queue.append(i)
+					self.parent[i] = element
+					vis[i] = 1
+					minn[i] = min(minn[element], dist[i])
+
+	def bfs3(self, root): # NORMAL BFS
+		queue = [root]
+		queue = deque(queue)
+		vis = [0]*self.n
+		count = 0
+		while len(queue)!=0:
+			element = queue.popleft()
+			vis[element] = 1
+			count += 1
+			for i in self.graph[element]:
+				if vis[i]==0 and remove[i]==0:
+					queue.append(i)
+					self.parent[i] = element
+					vis[i] = 1
+		return count
 
 	def dfs(self, root, ans): # Iterative DFS
 		stack=[root]
@@ -69,18 +101,16 @@ class Graph(object):
 		for i in range(self.n):
 			if indeg[i]==0:
 				q.append(i)
-		ans = []
 		while len(q)!=0:
 			e = q.popleft()
 			vis += 1
-			ans.append(e)
 			for i in self.graph[e]:
 				indeg[i] -= 1
 				if indeg[i]==0:
 					q.append(i)
 		if vis!=self.n:
 			return True
-		return ans
+		return False
 
 	def reroot(self, root, ans):
 		stack = [root]
@@ -100,29 +130,23 @@ class Graph(object):
 			# Change_The_Answers()
 
 n = int(input())
-g = Graph(26,True)
-done = {}
-s = input()
-start = s
+a = list(map(int,input().split()))
+g = Graph(n,False)
+w = {}
 for i in range(n-1):
-	x = input()
-	j = 0
-	while j<min(len(s),len(x)) and s[j]==x[j]:
-		j += 1
-	if j==len(x) and len(s)>len(x):
-		print ("Impossible")
-		exit()
-	if j==len(s):
-		continue
-	if (ord(s[j]),ord(x[j])) not in done:
-		g.addEdge(ord(s[j])-97,ord(x[j])-97)
-		done[ord(s[j]),ord(x[j])] = 1
-	s = x
-order = g.detect_cycle()
-if order==True:
-	print ("Impossible")
-	exit()
-ans = ""
-for i in order:
-	ans += chr(i+97)
-print (ans)
+	x,y = map(int,input().split())
+	w[(i+1,x-1)] = y
+	w[(x-1,i+1)] = y
+	g.addEdge(i+1,x-1)
+dist = [0]*n
+minn = [0]*n
+g.bfs(0)
+g.bfs2(0)
+remove = [0]*n
+for i in range(1,n):
+	if dist[i]-minn[i]>a[i]:
+		remove[i] = 1
+# print (dist)
+# print (minn)
+# print (remove)
+print (n-g.bfs3(0))

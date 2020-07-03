@@ -1,5 +1,5 @@
-# import sys
-# input = sys.stdin.readline
+import sys
+input = sys.stdin.readline
 from collections import deque
 
 class Graph(object):
@@ -15,18 +15,20 @@ class Graph(object):
 		if not self.directed:
 			self.graph[y].append(x)
 
-	def bfs(self, root): # NORMAL BFS
+	def bfs(self, root, vis): # NORMAL BFS
 		queue = [root]
 		queue = deque(queue)
-		vis = [0]*self.n
+		ans = 0
 		while len(queue)!=0:
 			element = queue.popleft()
 			vis[element] = 1
+			ans += 1
 			for i in self.graph[element]:
 				if vis[i]==0:
 					queue.append(i)
 					self.parent[i] = element
 					vis[i] = 1
+		return ans
 
 	def dfs(self, root, ans): # Iterative DFS
 		stack=[root]
@@ -69,18 +71,16 @@ class Graph(object):
 		for i in range(self.n):
 			if indeg[i]==0:
 				q.append(i)
-		ans = []
 		while len(q)!=0:
 			e = q.popleft()
 			vis += 1
-			ans.append(e)
 			for i in self.graph[e]:
 				indeg[i] -= 1
 				if indeg[i]==0:
 					q.append(i)
 		if vis!=self.n:
 			return True
-		return ans
+		return False
 
 	def reroot(self, root, ans):
 		stack = [root]
@@ -99,30 +99,15 @@ class Graph(object):
 				continue
 			# Change_The_Answers()
 
-n = int(input())
-g = Graph(26,True)
-done = {}
-s = input()
-start = s
-for i in range(n-1):
-	x = input()
-	j = 0
-	while j<min(len(s),len(x)) and s[j]==x[j]:
-		j += 1
-	if j==len(x) and len(s)>len(x):
-		print ("Impossible")
-		exit()
-	if j==len(s):
-		continue
-	if (ord(s[j]),ord(x[j])) not in done:
-		g.addEdge(ord(s[j])-97,ord(x[j])-97)
-		done[ord(s[j]),ord(x[j])] = 1
-	s = x
-order = g.detect_cycle()
-if order==True:
-	print ("Impossible")
-	exit()
-ans = ""
-for i in order:
-	ans += chr(i+97)
+n,m = map(int,input().split())
+g = Graph(n,False)
+for i in range(m):
+	x,y = map(int,input().split())
+	g.addEdge(x-1,y-1)
+vis = [0]*n
+ans = 1
+for i in range(n):
+	if not vis[i]:
+		c = g.bfs(i,vis)
+		ans = ans * (2**(c-1))
 print (ans)
