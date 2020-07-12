@@ -8,13 +8,11 @@ for nt in range(int(input())):
 	else:
 		flag = []
 		for i in range(n):
-			if a[i]==i+1:
+			if a[i]!=i+1:
 				flag.append(i)
 		# print (flag)
 		if len(flag)!=0:
-			if flag[0]==0 and flag[-1]==len(flag)-1:
-				print (1)
-			elif flag[-1]==n-1 and flag[0]==n-len(flag):
+			if flag[-1] - flag[0] == len(flag)-1:
 				print (1)
 			else:
 				print (2)
