@@ -1,5 +1,5 @@
 a = []
-for i in range(20):
+for i in range(40):
 	a.append(3**i)
 a = a[::-1]
 for nt in range(int(input())):
