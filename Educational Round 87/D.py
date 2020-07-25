@@ -1,14 +1,48 @@
-import math
-for nt in range(int(input())):
-	n=int(input())
-	m=2*n
-	a=((m-2)*180)/m
-	s=180-a
-	t=s
-	ans=0
-	temp=math.cos((s*math.pi)/180)
-	for i in range((n-2)//2):
-		# print (t,ans)
-		ans+=(math.cos((t*math.pi)/180))
-		t+=s
-	print (ans*2+1+2*(math.sin((s*math.pi)/180))-math.sin(s*math.pi/360))
+def check(num):
+	x = 0
+	for i in a:
+		if i<num:
+			x += 1
+		else:
+			break
+	y = n-x
+	for j in q:
+		if j>0:
+			if j>=num:
+				y += 1
+			else:
+				x += 1
+		else:
+			k = abs(j)
+			if k<=x:
+				x -= 1
+			else:
+				y -= 1
+	# print (num,x,y)
+	return x
+
+
+n,m = map(int,input().split())
+a = list(map(int,input().split()))
+q = list(map(int,input().split()))
+x = 0
+for i in q:
+	if i<0:
+		x += 1
+if 2*x==n+m:
+	print (0)
+	exit()
+
+low = 1
+high = n
+while low<high:
+	mid = (low+high)//2
+	if check(mid):
+		high = mid-1
+	else:
+		low = mid+1
+
+if check(low):
+	print (low-1)
+else:
+	print (low)
