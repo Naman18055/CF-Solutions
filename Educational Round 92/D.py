@@ -52,7 +52,7 @@ for nt in range(int(input())):
 	else:
 		done = r[1]-r[0]
 
-	if one>=2*done:
+	if one>=2*done and (done!=0 and k//done!=0):
 		print (max(0,one+2*(k-done)))
 		continue
 
