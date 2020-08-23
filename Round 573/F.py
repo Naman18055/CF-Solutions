@@ -1,13 +1,22 @@
 from bisect import bisect_left
 def calc(a,b):
-	c = [b[i][-1] for i in range(len(b))]
-	c.sort()
-	ans = 0
-	for i in a:
+	c = []
+	for i in b:
 		for j in i:
-			x = bisect_left(c,j)
+			c.append(j)
+	c = list(set(c))
+	d = []
+	for i in range(len(a)):
+		for j in a[i]:
+			d.append((j,i))
+	d.sort()
+
+	ans = 0
+	for i in d:
+		for j in i:
+			x = bisect_left(c,j[0])
 			# print (j,c,x)
-			ans += max(len(c)-x,1)
+			ans += (x*(j[1]+1))
 	return len(a)*len(b)
 
 
