@@ -1,62 +1,55 @@
-def sieve(n):
-	prime = [-1]*(n+1)
-	for i in range(2,n+1):
-		if prime[i]==-1:
-			for j in range(i,n+1,i):
-				prime[j] = i
-	return prime
+# COPIED 
 
+from math import ceil
 
-p = sieve(10**5)
-prime = []
-for i in range(len(p)):
-	if p[i]==i:
-		prime.append(i)
-for nt in range(int(input())):
-	n = int(input())
-	div = []
-	for i in range(2,int(n**0.5)+1):
-		if n%i==0:
-			div.append(i)
-			if i!=n//i:
-				div.append(n//i)
-	# print (div)
-	if len(div)==2:
-		print (div[0], div[1], n)
-		print (1)
-	else:
-		p = []
-		for i in prime:
-			if n%i==0:
-				p.append(i)
-		ans = []
-		for i in range(len(p)-1):
-			ans.append(p[i])
-			ans.append(p[i]*p[i+1])
-		ans.append(p[-1])
-		ans.append(p[-1]*p[0])
-		done = set(ans)
-		inc = {}
-		for i in div:
-			if i not in done:
-				for j in p:
-					if i%j==0:
-						if j not in inc:
-							inc[j] = [i]
-						else:
-							inc[j].append(i)
-						break
-		f = []
-		for i in range(0,len(ans),2):
-			f.append(ans[i])
-			if ans[i] in inc:
-				f.extend(inc[ans[i]])
-			f.append(ans[i+1])
-		f.append(n)
-		print (*f)
-		print (0)
-
-
-
-
-
+t = int(input())
+for _ in range(t):
+  n = int(input())
+  pf = []
+  for i in range(2, ceil(n**0.5)+1):
+    while n % i == 0:
+      pf.append(i)
+      n //= i
+  if n > 1:
+    pf.append(n)
+  if len(pf) == 2 and pf[0] != pf[1]:
+    print(pf[0], pf[1], pf[0]*pf[1])
+    print(1)
+  else:
+    pg = []
+    fac = []
+    nfac = []
+    while len(pf) > 0:
+      p = pf[-1]
+      mul = 0
+      while len(pf) > 0 and pf[-1] == p:
+        pf.pop()
+        mul += 1
+      pg.append([mul, p])
+    pg.sort()
+    pg = pg[::-1]
+    # print(pg)
+    cur = 0
+    if pg[0][0] == 1:
+      a = pg[0][1]
+      b = pg[1][1]
+      c = pg[2][1]
+      fac = [a, a*b*c, a*b, b, b*c, c, a*c]
+      cur = 3
+    else:
+      fac = [pg[0][1]**i for i in range(1, pg[0][0]+1)]
+      cur = 1
+    while cur < len(pg):
+      mul = pg[cur][0]
+      p = pg[cur][1]
+      nfac = []
+      for i in range(len(fac)):
+        if i == 0:
+          nfac += [fac[i]*(p**j) for j in range(mul, -1, -1)]
+        else:
+          nfac += [fac[i]*(p**j) for j in range(mul+1)]
+      nfac += [p**i for i in range(1, mul+1)]
+      fac = nfac
+      cur += 1
+    print(" ".join([str(i) for i in fac]))
+    print(0)
