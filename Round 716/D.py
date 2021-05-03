@@ -1,4 +1,4 @@
-#from hxu10 (113540436)
+#lfrom hxu10 (113540436)
 import random
 import bisect
 import io,os
